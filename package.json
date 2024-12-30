@@ -23,7 +23,7 @@
     "axios": "1.6.0",
     "bip39": "^3.1.0",
     "long": "^5.2.1",
-    "merkletreejs": "^0.3.9"
+    "merkletreejs": "^0.4.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
