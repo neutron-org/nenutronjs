@@ -1,7 +1,6 @@
 import { Coin } from '@cosmjs/proto-signing';
 import { ADMIN_MODULE_ADDRESS } from './constants';
 import { MsgExecuteContract } from '@neutron-org/neutronjs/neutron/cron/schedule';
-import { ConsumerParams } from '@neutron-org/neutronjs/interchain_security/ccv/v1/shared_consumer';
 
 export type ParamChangeProposalInfo = {
   title: string;
@@ -219,6 +218,47 @@ export type ConsensusParams = {
   abci?: {
     vote_extensions_enable_height: number;
   };
+};
+
+export type ConsumerParams = {
+  enabled: boolean;
+  /// /////////////////////
+  /// Distribution Params
+  /// Number of blocks between ibc-token-transfers from the consumer chain to
+  /// the provider chain. Note that at this transmission event a fraction of
+  /// the accumulated tokens are divided and sent consumer redistribution
+  /// address.
+  blocks_per_distribution_transmission: number;
+  /// Channel, and provider-chain receiving address to send distribution token
+  /// transfers over. These parameters is auto-set during the consumer <->
+  /// provider handshake procedure.
+  distribution_transmission_channel: string;
+  provider_fee_pool_addr_str: string;
+  /// Sent CCV related IBC packets will timeout after this duration
+  ccv_timeout_period: string; // Duration
+  /// Sent transfer related IBC packets will timeout after this duration
+  transfer_timeout_period: string; // Duration
+  /// The fraction of tokens allocated to the consumer redistribution address
+  /// during distribution events. The fraction is a string representing a
+  /// decimal number. For example "0.75" would represent 75%.
+  consumer_redistribution_fraction: string;
+  /// The number of historical info entries to persist in store.
+  /// This param is a part of the cosmos sdk staking module. In the case of
+  /// a ccv enabled consumer chain, the ccv module acts as the staking module.
+  historical_entries: number;
+  /// Unbonding period for the consumer,
+  /// which should be smaller than that of the provider in general.
+  unbonding_period: string; // Duration
+  /// !!! DEPRECATED !!! soft_opt_out_threshold is deprecated. see docs/docs/adrs/adr-015-partial-set-security.md
+  soft_opt_out_threshold: string;
+  /// Reward denoms. These are the denominations which are allowed to be sent to
+  /// the provider as rewards.
+  reward_denoms: Array<string>;
+  /// Provider-originated reward denoms. These are denoms coming from the
+  /// provider which are allowed to be used as rewards. e.g. "uatom"
+  provider_reward_denoms: Array<string>;
+  /// The period after which a consumer can retry sending a throttled packet.
+  retry_delay_period: string; // Duration
 };
 
 export type DecCoin = {
